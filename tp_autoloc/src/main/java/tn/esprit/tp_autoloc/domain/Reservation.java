@@ -1,28 +1,33 @@
 package tn.esprit.tp_autoloc.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tn.esprit.tp_autoloc.domain.enums.ModePaiement;
-import java.math.BigDecimal;
+import tn.esprit.tp_autoloc.domain.enums.StatutReservation;
 import java.time.LocalDate;
 import java.util.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class Paiement {
+public class Reservation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPaiement;
-    private BigDecimal montant;
-    private LocalDate datePaiement;
+    private Long idReservation;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
     @Enumerated(EnumType.STRING)
-    private ModePaiement modePaiement;
+    private StatutReservation statut;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicule_id")
+    private Vehicule vehicule;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contrat_id")
-    @JsonIgnore
     private Contrat contrat;
 }
