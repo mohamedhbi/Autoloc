@@ -15,6 +15,6 @@ public class Equipement {
     private String libelle;
 
     @ManyToMany(mappedBy = "equipements")
-    @JsonIgnore
+
     private Set<Vehicule> vehicules = new HashSet<>();
 }

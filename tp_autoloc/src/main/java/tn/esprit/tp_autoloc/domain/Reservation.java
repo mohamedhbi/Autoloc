@@ -26,7 +26,7 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "vehicule_id")
     private Vehicule vehicule;
-
+// contrat yetaamal wala supprimer maa el reservation
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contrat_id")
     private Contrat contrat;

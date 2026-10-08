@@ -16,12 +16,12 @@ public class Agence {
     private String ville;
     private String adresse;
     private String telephone;
-
+//cascade all yaani si nfasakh agence bch nfaasakh automatiallly employe w vehicule
     @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL)
-    @JsonIgnore
+
     private List<Employe> employes = new ArrayList<>();
 
     @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL)
-    @JsonIgnore
+
     private List<Vehicule> vehicules = new ArrayList<>();
 }

@@ -23,6 +23,6 @@ public class Paiement {
 
     @ManyToOne
     @JoinColumn(name = "contrat_id")
-    @JsonIgnore
+
     private Contrat contrat;
 }

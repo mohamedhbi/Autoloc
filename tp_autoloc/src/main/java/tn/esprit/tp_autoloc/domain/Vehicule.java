@@ -32,11 +32,11 @@ public class Vehicule {
     private Agence agence;
 
     @OneToMany(mappedBy = "vehicule")
-    @JsonIgnore
+
     private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
-    @JsonIgnore
+
     private List<Maintenance> maintenances = new ArrayList<>();
 
     @ManyToMany

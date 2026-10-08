@@ -19,9 +19,9 @@ public class Contrat {
     private boolean valide;
 
     @OneToOne(mappedBy = "contrat")
-    @JsonIgnore
-    private Reservation reservation;
 
+    private Reservation reservation;
+//un paiement ytnaha m liste yetfsakh mel base
     @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Paiement> paiements = new ArrayList<>();
 }

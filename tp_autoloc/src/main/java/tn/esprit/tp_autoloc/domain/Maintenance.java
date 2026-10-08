@@ -19,6 +19,6 @@ public class Maintenance {
 
     @ManyToOne
     @JoinColumn(name = "vehicule_id")
-    @JsonIgnore
+
     private Vehicule vehicule;
 }

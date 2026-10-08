@@ -21,6 +21,6 @@ public class Client {
     private LocalDate dateInscription;
 
     @OneToMany(mappedBy = "client")
-    @JsonIgnore
+
     private List<Reservation> reservations = new ArrayList<>();
 }
