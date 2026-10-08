@@ -39,7 +39,6 @@ public class Vehicule {
     @JsonIgnore
     private List<Maintenance> maintenances = new ArrayList<>();
 
-    // owner side: creates the join table "vehicule_equipements"
     @ManyToMany
     private Set<Equipement> equipements = new HashSet<>();
 }
