@@ -1,6 +1,6 @@
 package tn.esprit.tp_autoloc.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import tn.esprit.tp_autoloc.domain.enums.ModePaiement;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -23,6 +22,6 @@ public class Paiement {
 
     @ManyToOne
     @JoinColumn(name = "contrat_id")
-
+    @JsonBackReference("contrat-paiements")
     private Contrat contrat;
 }

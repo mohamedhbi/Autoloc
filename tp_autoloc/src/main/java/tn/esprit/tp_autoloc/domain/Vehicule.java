@@ -27,18 +27,22 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
 
+    // Côté propriétaire : aucune annotation Jackson
     @ManyToOne
     @JoinColumn(name = "agence_id")
     private Agence agence;
 
+    // Côté inverse : Reservation est créée seule -> @JsonIgnore
     @OneToMany(mappedBy = "vehicule")
-
+    @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 
+    // Côté inverse : Maintenance est créée seule -> @JsonIgnore
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
-
+    @JsonIgnore
     private List<Maintenance> maintenances = new ArrayList<>();
 
+    // Côté propriétaire du ManyToMany : sérialisé normalement
     @ManyToMany
     private Set<Equipement> equipements = new HashSet<>();
 }

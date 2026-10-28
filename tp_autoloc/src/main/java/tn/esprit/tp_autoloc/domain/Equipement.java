@@ -14,7 +14,8 @@ public class Equipement {
     private Long idEquipement;
     private String libelle;
 
+    // Côté inverse du ManyToMany : coupe la boucle Vehicule <-> Equipement
     @ManyToMany(mappedBy = "equipements")
-
+    @JsonIgnore
     private Set<Vehicule> vehicules = new HashSet<>();
 }

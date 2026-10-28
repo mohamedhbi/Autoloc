@@ -16,12 +16,14 @@ public class Agence {
     private String ville;
     private String adresse;
     private String telephone;
-//cascade all yaani si nfasakh agence bch nfaasakh automatiallly employe w vehicule
-    @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL)
 
+    //cascade all yaani si nfasakh agence bch nfaasakh automatiallly employe w vehicule
+    // Employe et Vehicule sont créés seuls (avec "agence": {"idAgence": 1}) -> @JsonIgnore côté inverse
+    @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Employe> employes = new ArrayList<>();
 
     @OneToMany(mappedBy = "agence", cascade = CascadeType.ALL)
-
+    @JsonIgnore
     private List<Vehicule> vehicules = new ArrayList<>();
 }

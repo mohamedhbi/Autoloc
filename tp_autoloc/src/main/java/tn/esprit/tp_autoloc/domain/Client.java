@@ -20,7 +20,8 @@ public class Client {
     private String numPermis;
     private LocalDate dateInscription;
 
+    // Côté inverse : Reservation est créée seule avec "client": {"idClient": 1} -> @JsonIgnore
     @OneToMany(mappedBy = "client")
-
+    @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 }
