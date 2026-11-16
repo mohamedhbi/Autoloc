@@ -5,13 +5,15 @@ import tn.esprit.tp_autoloc.domain.Reservation;
 
 public interface IReservationService {
 
-    Reservation create(Reservation reservation);          // refuse un id non null
+    Reservation create(Reservation reservation);
 
-    Reservation findById(Long id);        // ResourceNotFoundException si absent
+    Reservation findById(Long id);
 
     List<Reservation> findAll();
 
-    Reservation update(Long id, Reservation reservation); // charge l'existant, recopie, save
+    Reservation update(Long id, Reservation reservation);
 
-    void deleteById(Long id);     // ResourceNotFoundException si absent
+    void deleteById(Long id);
+
+    Reservation annulerReservation(Long id);
 }
