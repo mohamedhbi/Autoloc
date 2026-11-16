@@ -7,13 +7,17 @@ import tn.esprit.tp_autoloc.domain.Client;
 import tn.esprit.tp_autoloc.exception.ResourceNotFoundException;
 import tn.esprit.tp_autoloc.repository.IClientRepository;
 import tn.esprit.tp_autoloc.service.IClientService;
+import tn.esprit.tp_autoloc.web.dto.ClientDTO;
+import tn.esprit.tp_autoloc.web.mapper.ClientMapper;
 
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService {
 
     private final IClientRepository clientRepository;
+    private final ClientMapper clientMapper;   // ← ajout
 
+    // ===== Méthodes existantes (entités) =====
     @Override
     public Client create(Client client) {
         if (client.getIdClient() != null) {
@@ -39,7 +43,6 @@ public class ClientServiceImpl implements IClientService {
     public Client update(Long id, Client client) {
         valider(client);
         Client existant = findById(id);
-        // seuls les attributs simples sont recopiés : ni l'identifiant, ni les associations
         existant.setNom(client.getNom());
         existant.setPrenom(client.getPrenom());
         existant.setEmail(client.getEmail());
@@ -64,5 +67,27 @@ public class ClientServiceImpl implements IClientService {
         if (client.getEmail() == null || client.getEmail().isBlank()) {
             throw new IllegalArgumentException("L'e-mail du client est obligatoire");
         }
+    }
+
+    // ===== Nouvelles méthodes DTO =====
+    @Override
+    public ClientDTO creerDto(ClientDTO dto) {
+        Client client = clientMapper.toEntity(dto);
+        Client saved = clientRepository.save(client);
+        return clientMapper.toDto(saved);
+    }
+
+    @Override
+    public ClientDTO obtenirParId(Long id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", id));
+        return clientMapper.toDto(client);
+    }
+
+    @Override
+    public List<ClientDTO> listerTous() {
+        return clientRepository.findAll().stream()
+                .map(clientMapper::toDto)
+                .toList();
     }
 }

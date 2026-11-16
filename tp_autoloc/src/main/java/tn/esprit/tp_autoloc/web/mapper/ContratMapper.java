@@ -1,0 +1,19 @@
+package tn.esprit.tp_autoloc.web.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import tn.esprit.tp_autoloc.domain.Contrat;
+import tn.esprit.tp_autoloc.web.dto.ContratDTO;
+
+@Mapper(componentModel = "spring")
+public interface ContratMapper {
+
+    @Mapping(target = "id", source = "idContrat")
+    @Mapping(target = "reservationId", source = "reservation.idReservation")
+    ContratDTO toDto(Contrat contrat);
+
+    @Mapping(target = "idContrat", source = "id")
+    @Mapping(target = "reservation", ignore = true)
+    @Mapping(target = "paiements", ignore = true)  // les paiements sont gérés manuellement
+    Contrat toEntity(ContratDTO dto);
+}

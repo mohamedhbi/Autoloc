@@ -2,6 +2,7 @@ package tn.esprit.tp_autoloc.service;
 
 import java.util.List;
 import tn.esprit.tp_autoloc.domain.Agence;
+import tn.esprit.tp_autoloc.web.dto.AgenceDTO;
 
 public interface IAgenceService {
 
@@ -14,4 +15,11 @@ public interface IAgenceService {
     Agence update(Long id, Agence agence); // charge l'existant, recopie, save
 
     void deleteById(Long id);     // ResourceNotFoundException si absent
+
+    AgenceDTO creerDto(AgenceDTO dto);
+    AgenceDTO obtenirParId(Long id);
+    List<AgenceDTO> listerToutes();
+
+
+
 }

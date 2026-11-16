@@ -2,16 +2,19 @@ package tn.esprit.tp_autoloc.service;
 
 import java.util.List;
 import tn.esprit.tp_autoloc.domain.Client;
+import tn.esprit.tp_autoloc.web.dto.ClientDTO;
 
 public interface IClientService {
 
-    Client create(Client client);          // refuse un id non null
-
-    Client findById(Long id);        // ResourceNotFoundException si absent
-
+    // Méthodes existantes (entités)
+    Client create(Client client);
+    Client findById(Long id);
     List<Client> findAll();
+    Client update(Long id, Client client);
+    void deleteById(Long id);
 
-    Client update(Long id, Client client); // charge l'existant, recopie, save
-
-    void deleteById(Long id);     // ResourceNotFoundException si absent
+    // Nouvelles méthodes DTO (Atelier 7)
+    ClientDTO creerDto(ClientDTO dto);
+    ClientDTO obtenirParId(Long id);
+    List<ClientDTO> listerTous();
 }

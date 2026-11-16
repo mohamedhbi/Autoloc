@@ -2,16 +2,23 @@ package tn.esprit.tp_autoloc.service;
 
 import java.util.List;
 import tn.esprit.tp_autoloc.domain.Vehicule;
+import tn.esprit.tp_autoloc.web.dto.VehiculeDTO;
 
 public interface IVehiculeService {
 
-    Vehicule create(Vehicule vehicule);          // refuse un id non null
-
-    Vehicule findById(Long id);        // ResourceNotFoundException si absent
-
+    // Méthodes existantes (entités)
+    Vehicule create(Vehicule vehicule);
+    Vehicule findById(Long id);
     List<Vehicule> findAll();
+    Vehicule update(Long id, Vehicule vehicule);
+    void deleteById(Long id);
 
-    Vehicule update(Long id, Vehicule vehicule); // charge l'existant, recopie, save
+    // Affectation / Désaffectation (Atelier 7)
+    void affecterVehiculeAAgence(Long vehiculeId, Long agenceId);
+    void desaffecterVehiculeDeAgence(Long vehiculeId);
 
-    void deleteById(Long id);     // ResourceNotFoundException si absent
+    // Nouvelles méthodes DTO (Atelier 7)
+    VehiculeDTO creerDto(VehiculeDTO dto);
+    VehiculeDTO obtenirParId(Long id);
+    List<VehiculeDTO> listerTous();
 }
