@@ -18,6 +18,6 @@ public class ContratDTO {
     private boolean valide;
     private Long reservationId;
 
-    @Valid   // ← CRUCIAL pour que la validation descende dans la liste
+    @Valid
     private List<PaiementDTO> paiements;
 }

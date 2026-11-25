@@ -10,10 +10,11 @@ public interface ContratMapper {
 
     @Mapping(target = "id", source = "idContrat")
     @Mapping(target = "reservationId", source = "reservation.idReservation")
+    @Mapping(target = "paiements", source = "paiements")
     ContratDTO toDto(Contrat contrat);
 
     @Mapping(target = "idContrat", source = "id")
     @Mapping(target = "reservation", ignore = true)
-    @Mapping(target = "paiements", ignore = true)  // les paiements sont gérés manuellement
+    @Mapping(target = "paiements", ignore = true)
     Contrat toEntity(ContratDTO dto);
 }

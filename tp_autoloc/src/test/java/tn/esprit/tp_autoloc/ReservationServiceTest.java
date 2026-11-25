@@ -11,32 +11,51 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import tn.esprit.tp_autoloc.domain.Client;
 import tn.esprit.tp_autoloc.domain.Reservation;
 import tn.esprit.tp_autoloc.domain.enums.StatutReservation;
+import tn.esprit.tp_autoloc.repository.IClientRepository;
 import tn.esprit.tp_autoloc.repository.IReservationRepository;
+import tn.esprit.tp_autoloc.repository.IVehiculeRepository;
+import tn.esprit.tp_autoloc.service.factory.TarificationStrategyFactory;
 import tn.esprit.tp_autoloc.service.impl.ReservationServiceImpl;
 import tn.esprit.tp_autoloc.service.observer.EmailNotificationObserver;
 import tn.esprit.tp_autoloc.service.observer.ReservationSubject;
 import tn.esprit.tp_autoloc.service.observer.SmsNotificationObserver;
+import tn.esprit.tp_autoloc.web.mapper.ReservationMapper;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
 
-    @Mock
-    private IReservationRepository reservationRepository;
+    @Mock private IReservationRepository reservationRepository;
+    @Mock private IClientRepository clientRepository;
+    @Mock private IVehiculeRepository vehiculeRepository;
+    @Mock private TarificationStrategyFactory tarificationStrategyFactory;
+    @Mock private ReservationMapper reservationMapper;
 
+    @InjectMocks
     private ReservationServiceImpl reservationService;
 
     @BeforeEach
     void setUp() {
+        // Construire le Subject avec les 2 observateurs réels
         EmailNotificationObserver emailObs = new EmailNotificationObserver();
         SmsNotificationObserver smsObs = new SmsNotificationObserver();
         ReservationSubject subject = new ReservationSubject(List.of(emailObs, smsObs));
-        reservationService = new ReservationServiceImpl(reservationRepository, subject);
+
+        // Réinjecter le Subject dans le service via le constructeur
+        reservationService = new ReservationServiceImpl(
+                reservationRepository,
+                clientRepository,
+                vehiculeRepository,
+                subject,
+                tarificationStrategyFactory,
+                reservationMapper
+        );
     }
 
     @Test

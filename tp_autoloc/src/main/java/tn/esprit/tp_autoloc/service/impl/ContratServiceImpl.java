@@ -10,6 +10,7 @@ import tn.esprit.tp_autoloc.exception.ResourceNotFoundException;
 import tn.esprit.tp_autoloc.repository.IContratRepository;
 import tn.esprit.tp_autoloc.repository.IReservationRepository;
 import tn.esprit.tp_autoloc.service.IContratService;
+import tn.esprit.tp_autoloc.web.dto.ChiffreAffaireAgenceDTO;
 import tn.esprit.tp_autoloc.web.dto.ContratDTO;
 import tn.esprit.tp_autoloc.web.dto.PaiementDTO;
 import tn.esprit.tp_autoloc.web.mapper.ContratMapper;
@@ -19,14 +20,13 @@ import tn.esprit.tp_autoloc.web.mapper.ContratMapper;
 public class ContratServiceImpl implements IContratService {
 
     private final IContratRepository contratRepository;
-    private final IReservationRepository reservationRepository;   // ← ajout
+    private final IReservationRepository reservationRepository;
     private final ContratMapper contratMapper;
 
     @Override
     public Contrat create(Contrat contrat) {
         if (contrat.getIdContrat() != null) {
-            throw new IllegalArgumentException(
-                    "Un nouveau contrat ne doit pas avoir d'identifiant");
+            throw new IllegalArgumentException("Un nouveau contrat ne doit pas avoir d'identifiant");
         }
         valider(contrat);
         return contratRepository.save(contrat);
@@ -61,36 +61,34 @@ public class ContratServiceImpl implements IContratService {
         contratRepository.deleteById(id);
     }
 
-    // ===== Méthode DTO avec gestion des paiements et de la réservation =====
     @Override
     public ContratDTO creerDto(ContratDTO dto) {
-        // 1. Convertir le DTO en entité
         Contrat contrat = contratMapper.toEntity(dto);
 
-        // 2. Associer la réservation si fournie
         if (dto.getReservationId() != null) {
             Reservation reservation = reservationRepository.findById(dto.getReservationId())
                     .orElseThrow(() -> new ResourceNotFoundException("Reservation", dto.getReservationId()));
             contrat.setReservation(reservation);
         }
 
-        // 3. Associer les paiements au contrat (cascade via orphanRemoval)
         if (dto.getPaiements() != null && !dto.getPaiements().isEmpty()) {
             for (PaiementDTO p : dto.getPaiements()) {
                 Paiement paiement = new Paiement();
                 paiement.setMontant(p.getMontant());
                 paiement.setDatePaiement(p.getDatePaiement());
                 paiement.setModePaiement(p.getModePaiement());
-                paiement.setContrat(contrat);  // lien bidirectionnel
+                paiement.setContrat(contrat);
                 contrat.getPaiements().add(paiement);
             }
         }
 
-        // 4. Sauvegarder (les paiements sont sauvés en cascade)
         Contrat saved = contratRepository.save(contrat);
-
-        // 5. Reconvertir en DTO
         return contratMapper.toDto(saved);
+    }
+
+    @Override
+    public List<ChiffreAffaireAgenceDTO> chiffreAffaireParAgence() {
+        return contratRepository.chiffreAffaireParAgence();
     }
 
     private void valider(Contrat contrat) {

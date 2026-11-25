@@ -6,7 +6,6 @@ import tn.esprit.tp_autoloc.web.dto.ClientDTO;
 
 public interface IClientService {
 
-    // Méthodes existantes (entités)
     Client create(Client client);
     Client findById(Long id);
     List<Client> findAll();

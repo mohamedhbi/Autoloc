@@ -1,11 +1,16 @@
 package tn.esprit.tp_autoloc.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.tp_autoloc.domain.Agence;
 import tn.esprit.tp_autoloc.domain.Vehicule;
+import tn.esprit.tp_autoloc.domain.enums.CategorieVehicule;
+import tn.esprit.tp_autoloc.domain.enums.StatutVehicule;
 import tn.esprit.tp_autoloc.exception.ResourceNotFoundException;
 import tn.esprit.tp_autoloc.repository.IAgenceRepository;
 import tn.esprit.tp_autoloc.repository.IVehiculeRepository;
@@ -18,15 +23,14 @@ import tn.esprit.tp_autoloc.web.mapper.VehiculeMapper;
 public class VehiculeServiceImpl implements IVehiculeService {
 
     private final IVehiculeRepository vehiculeRepository;
-    private final IAgenceRepository agenceRepository;   // ← ajout
-    private final VehiculeMapper vehiculeMapper;        // ← ajout
+    private final IAgenceRepository agenceRepository;
+    private final VehiculeMapper vehiculeMapper;
 
-    // ===== Méthodes existantes (entités) =====
+    // ===== CRUD existants =====
     @Override
     public Vehicule create(Vehicule vehicule) {
         if (vehicule.getIdVehicule() != null) {
-            throw new IllegalArgumentException(
-                    "Un nouveau vehicule ne doit pas avoir d'identifiant");
+            throw new IllegalArgumentException("Un nouveau vehicule ne doit pas avoir d'identifiant");
         }
         valider(vehicule);
         return vehiculeRepository.save(vehicule);
@@ -73,7 +77,7 @@ public class VehiculeServiceImpl implements IVehiculeService {
         }
     }
 
-    // ===== Affectation / Désaffectation =====
+    // ===== Affectation =====
     @Override
     @Transactional
     public void affecterVehiculeAAgence(Long vehiculeId, Long agenceId) {
@@ -97,11 +101,10 @@ public class VehiculeServiceImpl implements IVehiculeService {
         vehiculeRepository.save(vehicule);
     }
 
-    // ===== Méthodes DTO =====
+    // ===== DTO =====
     @Override
     public VehiculeDTO creerDto(VehiculeDTO dto) {
         Vehicule vehicule = vehiculeMapper.toEntity(dto);
-        // Associer l'agence si agenceId est fourni
         if (dto.getAgenceId() != null) {
             Agence agence = agenceRepository.findById(dto.getAgenceId())
                     .orElseThrow(() -> new ResourceNotFoundException("Agence", dto.getAgenceId()));
@@ -113,9 +116,7 @@ public class VehiculeServiceImpl implements IVehiculeService {
 
     @Override
     public VehiculeDTO obtenirParId(Long id) {
-        Vehicule vehicule = vehiculeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicule", id));
-        return vehiculeMapper.toDto(vehicule);
+        return vehiculeMapper.toDto(findById(id));
     }
 
     @Override
@@ -123,5 +124,24 @@ public class VehiculeServiceImpl implements IVehiculeService {
         return vehiculeRepository.findAll().stream()
                 .map(vehiculeMapper::toDto)
                 .toList();
+    }
+
+    // ===== Atelier 8 : Query Methods =====
+    @Override
+    public List<VehiculeDTO> findByAgenceVille(String ville) {
+        return vehiculeRepository.findByAgenceVille(ville).stream()
+                .map(vehiculeMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public Page<VehiculeDTO> findByStatut(StatutVehicule statut, Pageable pageable) {
+        return vehiculeRepository.findByStatut(statut, pageable).map(vehiculeMapper::toDto);
+    }
+
+    @Override
+    public List<Vehicule> rechercherVehiculesDisponibles(String ville, CategorieVehicule categorie,
+                                                         LocalDate dateDebut, LocalDate dateFin) {
+        return vehiculeRepository.rechercherVehiculesDisponibles(ville, categorie, dateDebut, dateFin);
     }
 }
